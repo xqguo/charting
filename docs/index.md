@@ -1,1 +1,1 @@
-[A collection of charting comparison](charting.html)
+[A collection of charting comparison](chart.html)
