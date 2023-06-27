@@ -1,14 +1,19 @@
 ---
 title: Plotly vs Seaborn
+format:
+  revealjs: 
+    theme: serif
 jupyter: python3
 ---
 
+# Libraries
 
-### Both Seaborn and Plotly are nice charting libs in python
+- Both Seaborn and Plotly are nice charting libs in python
 
-This comparison is my personal subjective view and reminder to myself of the nice features of each.  
+- This comparison is my personal subjective view and reminder to myself of the nice features of each.  
 
 ```{python}
+#| echo: true
 import pandas as pd
 import numpy as np
 import seaborn as sns
@@ -18,9 +23,12 @@ import plotly.express as px
 import matplotlib.pyplot as plt
 ```
 
-### Load a few popular datasets to use
+## Datasets
+
+Load a few popular datasets to use
 
 ```{python}
+#| echo: true
 penguins = sns.load_dataset("penguins")
 healthexp = sns.load_dataset("healthexp")
 gapminder = px.data.gapminder()
@@ -28,13 +36,16 @@ iris = sns.load_dataset("iris")
 iris.columns = [col.replace('_', ' ') for col in iris.columns]
 ```
 
-### Line chart
+## Line chart
 
-Plotly need to summarize the data before plotting while Seaborn has built-in stats function and distribution allows plot a distribution in charts
+- Plotly need to summarize the data before plotting 
+- Seaborn has built-in stats function and distribution allows plot a distribution in charts
 
-Here is a plotly chart.
+## Here is a plotly chart.
 
 ```{python}
+#| echo: true
+#| output-location: slide
 fig = px.line(gapminder.groupby(["continent","year"]).mean("leftExp").reset_index(),
               x="year", 
               y="lifeExp", 
@@ -50,28 +61,40 @@ fig = px.line(gapminder.groupby(["continent","year"]).mean("leftExp").reset_inde
 fig.show()
 ```
 
-Here is the seaborn chart. A lot less code needed, and more features in the chart.
+## Here is the seaborn chart. 
+
+A lot less code needed, and more features in the chart.
 
 ```{python}
-fig = sns.lineplot(gapminder, x="year", 
+#| echo: true
+#| output-location: column
+fig = sns.lineplot(gapminder, 
+              x="year", 
               y="lifeExp", 
-              hue="continent",               
-              )
+              hue="continent")
 plt.show()
 ```
 
-### Bar chart 
+# Bar chart 
 
-Seaborn bar plot automatically shows a clustered bar with built-in stats for average and error bar, but creating a stacked bar seems difficult.
+## Seaborn bar plot 
+
+automatically shows a clustered bar with built-in stats for average and error bar, but creating a stacked bar seems difficult.
 
 ```{python}
+#| echo: true
+#| output-location: slide
 sns.barplot(penguins, x="species", y="body_mass_g", hue="sex")
 plt.show()
 ```
 
-Plotly needs to manually compute stats and no error bar. but otherwise shows a clusters bar easily
+## Plotly 
+
+It needs to manually compute stats and no error bar. but otherwise shows a clusters bar easily
 
 ```{python}
+#| echo: true
+#| output-location: slide
 px.bar(
     (penguins
      .groupby(["species", "sex"])
@@ -86,11 +109,15 @@ px.bar(
 )
 ```
 
-### Pair plot
-Seaborn built-in stats make the a lot better than plotly
+# Pair plot
+
+## Seaborn 
+
+Built-in stats make the a lot better than plotly
 
 ```{python}
-
+#| echo: true
+#| output-location: slide
 fig = sns.pairplot(
     iris,
     hue="species",
@@ -101,9 +128,13 @@ fig.map_upper(sns.kdeplot)
 plt.show()
 ```
 
-Plotly scatter matrix is scatter only.
+## Plotly 
+
+scatter matrix is scatter only.
 
 ```{python}
+#| echo: true
+#| output-location: slide
 fig = px.scatter_matrix(
     iris,
     dimensions=["sepal length", "sepal width", "petal length", "petal width"],
@@ -117,11 +148,17 @@ fig = px.scatter_matrix(
 fig.show()
 ```
 
-### Plotly has nice type of charts like sunburst and geo plots
+# Plotly features
 
-A sunburst chart shows hierarchy and hover info is very useful here.
+We already see the interactive nature. It also has nice type of charts like sunburst and geo plots
+
+## A sunburst chart 
+
+It shows hierarchy and hover info is very useful here.
 
 ```{python}
+#| echo: true
+#| output-location: slide
 df = px.data.gapminder().query("year == 2007")
 fig = px.sunburst(df, path=['continent', 'country'], values='pop',
                   color='lifeExp', 
@@ -134,9 +171,13 @@ fig = px.sunburst(df, path=['continent', 'country'], values='pop',
 fig.show()
 ```
 
-A geo plot using iso_alpha codes and plot population. 
+## A geo plot 
+
+Use iso_alpha codes and plot population. 
 
 ```{python}
+#| echo: true
+#| output-location: slide
 fig = px.scatter_geo(df, locations="iso_alpha",
                      size="pop",
                      color='pop',
@@ -146,9 +187,13 @@ fig = px.scatter_geo(df, locations="iso_alpha",
 fig.show()
 ```
 
-Plot routes in the earch surface
+## Line Geo 
+
+Plot routes in the earth surface
 
 ```{python}
+#| echo: true
+#| output-location: slide
 fig = px.line_geo(df.iloc[:2,], locations="iso_alpha",
                   color="year", # "continent" is one of the columns of gapminder
                 #   projection="orthographic",
@@ -159,11 +204,13 @@ fig.show()
 ```
 
 
-### Plotly can have interactivity and animation
+## Animation
 
 Here is the gapminder animation using plotly.
 
 ```{python}
+#| echo: true
+#| output-location: slide
 fig = px.scatter(gapminder, x="gdpPercap", y="lifeExp", animation_frame="year", animation_group="country",
            size="pop", color="continent", hover_name="country", 
         #    facet_col="continent",
